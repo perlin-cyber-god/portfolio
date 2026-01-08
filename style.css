@@ -140,8 +140,8 @@ section {
 }
 
 .profile-frame {
-    width: 300px;  /* Sized for balance */
-    height: 300px;
+    width: 340px;  /* Sized for balance */
+    height: 340px;
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid var(--accent);
@@ -153,11 +153,15 @@ section {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(100%);
-    transition: filter 0.3s ease;
+    /* Removed the grayscale filter so it is always colored */
+    filter: none; 
+    transition: transform 0.3s ease;
 }
 
-.profile-frame:hover .profile-img { filter: grayscale(0%); }
+/* Optional: Slight zoom on hover instead of color change */
+.profile-frame:hover .profile-img {
+    transform: scale(1.05);
+}
 
 .hero-hint {
     font-family: var(--font-mono);
@@ -325,7 +329,9 @@ section {
     /* Transparent background, remove orange */
     background: transparent;
     position: relative;
-    transform: scale(0.6); /* Scale down to fit */
+    /* CHANGED FROM 0.6 TO 1.2 to increase size */
+    transform: scale(1.2); 
+    transform-origin: center right; /* Ensures it grows from the right side */
 }
 
 .finger, .palm, .wrist {
@@ -443,6 +449,205 @@ section {
     top: -120px;
     position: absolute;
     opacity: 0.5;
+}
+/* ========================================
+   HERO CHAT / COMIC BLOCK
+   ========================================
+*/
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px; /* Limits width for readability */
+    margin-bottom: var(--spacing-md);
+    font-family: var(--font-mono);
+}
+
+.chat-bubble {
+    padding: 12px 18px;
+    border-radius: 8px;
+    position: relative;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    animation: popIn 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.chat-sender {
+    display: block;
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+    opacity: 0.7;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Incoming Message (The Question) */
+.incoming {
+    background: rgba(255, 255, 255, 0.05); /* Very subtle grey */
+    border-left: 2px solid var(--text-secondary);
+    color: var(--text-secondary);
+    align-self: flex-start;
+    border-radius: 0 12px 12px 12px;
+    animation-delay: 1.5s; /* Appears after page load */
+}
+
+/* Outgoing Message (Your Answer) */
+.outgoing {
+    background: rgba(0, 243, 255, 0.05); /* Subtle Cyan tint */
+    border-right: 2px solid var(--accent);
+    color: var(--text-primary);
+    align-self: flex-end;
+    text-align: right;
+    border-radius: 12px 0 12px 12px;
+    animation-delay: 2.5s; /* Appears after question */
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.05);
+}
+/* ========================================
+   IDENTITY / ABOUT SECTION UPDATE
+   ========================================
+*/
+
+/* 1. Create a Grid for the About Section */
+.identity-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr; /* Text gets more space, Visual gets less */
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+/* On mobile, stack them */
+@media (max-width: 768px) {
+    .identity-grid {
+        grid-template-columns: 1fr;
+    }
+    .identity-visual {
+        display: none; /* Optional: Hide visual on very small screens if needed */
+    }
+}
+
+/* 2. The Oscilloscope Container */
+.identity-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.oscilloscope-screen {
+    width: 280px;
+    height: 280px;
+    background: #0f1114; /* Dark Screen */
+    border: 2px solid #333;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+/* The Green Grid Background inside the screen */
+.grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    z-index: 1;
+}
+
+/* 3. The Signal Animation (Lissajous Figure) */
+.signal-trace {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+    z-index: 2;
+    /* The Magic Math Animation */
+    animation: lissajous 4s linear infinite;
+}
+
+/* Ghost trails to create the "line" effect */
+.delay-1 { animation-delay: -0.05s; opacity: 0.8; transform: scale(0.9); }
+.delay-2 { animation-delay: -0.1s; opacity: 0.6; transform: scale(0.8); }
+.delay-3 { animation-delay: -0.15s; opacity: 0.4; transform: scale(0.7); }
+
+.signal-ghost {
+    /* Faint trail */
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    opacity: 0.1;
+    animation: lissajous 4s linear infinite;
+    animation-delay: -0.3s;
+}
+
+/* Math Logic: X moves with Sin, Y moves with Cos at different speeds */
+@keyframes lissajous {
+    0% {
+        transform: translate(
+            calc(100px * sin(0deg)), 
+            calc(100px * cos(0deg))
+        );
+    }
+    25% {
+        transform: translate(
+            calc(100px * sin(90deg)), 
+            calc(100px * cos(180deg)) /* 2x speed on Y axis creates figure 8 */
+        );
+    }
+    50% {
+        transform: translate(
+            calc(100px * sin(180deg)), 
+            calc(100px * cos(360deg))
+        );
+    }
+    75% {
+        transform: translate(
+            calc(100px * sin(270deg)), 
+            calc(100px * cos(540deg))
+        );
+    }
+    100% {
+        transform: translate(
+            calc(100px * sin(360deg)), 
+            calc(100px * cos(720deg))
+        );
+    }
+}
+
+/* 4. Text Overlay on Screen */
+.os-text {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 0.6rem;
+    opacity: 0.6;
+    letter-spacing: 1px;
+    z-index: 3;
+}
+
+.highlight {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+@keyframes popIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .ball.first { animation: firstball .9s alternate ease-in infinite; }

@@ -102,33 +102,227 @@ section {
     color: var(--accent);
 }
 
-/* --- Hero Section --- */
+/* ========================================
+   HERO SECTION & ENVELOPE ANIMATION
+   ========================================
+*/
 .hero-section {
-    min-height: 90vh;
+    min-height: 90vh; /* Full viewport height */
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
+    /* Ensure it doesn't overlap nav */
+    margin-top: 0; 
 }
 
-.hero-name {
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    letter-spacing: -1px;
-    margin-bottom: var(--spacing-sm);
+/* Helper text below envelope */
+.hero-hint {
+    position: absolute;
+    bottom: 20%;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    opacity: 0.7;
+    animation: blink 2s infinite;
 }
 
-.hero-tagline {
-    font-size: clamp(1.2rem, 3vw, 2rem);
-    color: var(--text-secondary);
-    font-weight: 400;
-    margin-bottom: var(--spacing-md);
+@keyframes blink {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
 }
 
-.hero-sub {
-    max-width: 600px;
-    color: var(--text-secondary);
-    font-size: 1.1rem;
+/* Container */
+.letter-image {
+    position: relative;
+    width: 260px; /* Slightly wider to fit name */
+    height: 200px;
+    cursor: pointer;
+    z-index: 10;
 }
+
+/* The Envelope Wrapper */
+.animated-mail {
+    position: absolute;
+    height: 150px;
+    width: 260px;
+    transition: 0.4s;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* The Front Flaps (Body) */
+.animated-mail .body {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 100px 260px;
+    /* Dark Grey Card Color */
+    border-color: transparent transparent var(--card-bg) transparent; 
+    z-index: 2;
+    filter: drop-shadow(0 -1px 0 rgba(255,255,255,0.05));
+}
+
+/* The Top Flap */
+.animated-mail .top-fold {
+    position: absolute;
+    top: 50px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 50px 130px 0 130px; /* Half of width */
+    transform-origin: 50% 0%;
+    transition: transform 0.4s 0.4s, z-index 0.2s 0.4s;
+    /* Slightly lighter than body for depth */
+    border-color: #1e2126 transparent transparent transparent; 
+    z-index: 2;
+}
+
+/* The Back of Envelope */
+.animated-mail .back-fold {
+    position: absolute;
+    bottom: 0;
+    width: 260px;
+    height: 100px;
+    background: #0f1114; /* Very dark inside */
+    z-index: 0;
+}
+
+/* The Left/Side Flap */
+.animated-mail .left-fold {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 50px 0 50px 130px;
+    /* Shadowed side */
+    border-color: transparent transparent transparent #121417; 
+    z-index: 2;
+}
+
+/* The Paper (Letter) */
+.animated-mail .letter {
+    left: 20px;
+    bottom: 0px;
+    position: absolute;
+    width: 220px; /* Fits inside 260px envelope */
+    height: 60px; /* Hidden state */
+    background: var(--text-primary); /* White paper */
+    z-index: 1;
+    overflow: hidden;
+    transition: 0.4s 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* Cyan Striped Border on Paper */
+.letter-border {
+    height: 6px;
+    width: 100%;
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--accent),
+        var(--accent) 8px,
+        transparent 8px,
+        transparent 18px
+    );
+    opacity: 0.4;
+    margin-bottom: 12px;
+}
+
+/* Content inside Letter */
+.letter-content {
+    text-align: center;
+    width: 100%;
+    opacity: 0; /* Hidden initially */
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.letter-name {
+    font-family: var(--font-main);
+    color: #1a1d21; /* Dark text on white paper */
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    letter-spacing: -0.5px;
+}
+
+.letter-title {
+    font-family: var(--font-mono);
+    color: #555;
+    font-size: 0.6rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+/* Stamp Decoration */
+.letter-stamp-inner {
+    margin-top: 10px;
+    width: 24px; 
+    height: 24px; 
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.2;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Shadow under Envelope */
+.shadow {
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    width: 400px;
+    height: 30px;
+    transition: 0.4s;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    /* Soft Cyan Glow */
+    background: radial-gradient(rgba(0, 243, 255, 0.1), rgba(0,0,0,0.0) 70%); 
+}
+
+/* --- Hover Interaction States --- */
+
+.letter-image:hover .animated-mail {
+    transform: translateY(50px);
+}
+
+.letter-image:hover .animated-mail .top-fold {
+    transition: transform 0.4s, z-index 0.2s;
+    transform: rotateX(180deg);
+    z-index: 0;
+}
+
+.letter-image:hover .animated-mail .letter {
+    height: 180px; /* Expands paper */
+}
+
+.letter-image:hover .letter-content {
+    opacity: 1; 
+    transform: translateY(0);
+    transition-delay: 0.5s; /* Wait for open */
+}
+
+.letter-image:hover .shadow {
+    width: 250px;
+    background: radial-gradient(rgba(0, 243, 255, 0.25), rgba(0,0,0,0.0) 70%);
+}
+
+/* ========================================
+   END HERO
+   ========================================
+*/
+
 
 /* --- Section Headers --- */
 .section-title {
@@ -321,7 +515,7 @@ footer {
     opacity: 0.5;
 }
 
-/* --- Animations --- */
+/* --- Animations (Scroll Reveal) --- */
 .hidden {
     opacity: 0;
     transform: translateY(30px);
@@ -332,8 +526,3 @@ footer {
     opacity: 1;
     transform: translateY(0);
 }
-
-/* Stagger delay for hero items */
-.hero-section.show .hero-name { transition-delay: 0.1s; }
-.hero-section.show .hero-tagline { transition-delay: 0.3s; }
-.hero-section.show .hero-sub { transition-delay: 0.5s; }

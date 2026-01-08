@@ -44,4 +44,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // 4. Grid Glow Effect (NEW CODE ADDED HERE)
+    const bg = document.querySelector('.circuit-background');
+    
+    if (bg) {
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            bg.style.setProperty('--mouse-x', `${x}px`);
+            bg.style.setProperty('--mouse-y', `${y}px`);
+        });
+    }
+
 });

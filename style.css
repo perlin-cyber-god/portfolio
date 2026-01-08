@@ -641,29 +641,56 @@ section {
    CIRCUIT / GRID BACKGROUND
    ========================================
 */
+/* ========================================
+   CIRCUIT / GRID BACKGROUND (WITH GLOW)
+   ========================================
+*/
 .circuit-background {
-    position: fixed; /* Stays in place while you scroll */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Puts it behind everything */
+    z-index: -1;
     background-color: var(--bg-color);
     
-    /* Create the Grid Pattern */
+    /* 1. Base Layer: Faint, Static Grid */
     background-image: 
         linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* 2. Glow Layer: Bright Grid (Revealed by Mouse) */
+.circuit-background::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     
-    background-size: 40px 40px; /* Size of grid squares */
+    /* The Pattern matches the base layer exactly, but brighter (Cyan) */
+    background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.25) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.25) 1px, transparent 1px);
+    background-size: 40px 40px;
     
-    /* Subtle glow in the center */
-    background: radial-gradient(circle at 50% 50%, rgba(11, 12, 14, 0) 0%, #0b0c0e 90%),
-                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
-                
-    background-size: 100% 100%, 40px 40px, 40px 40px;
-    animation: panGrid 20s linear infinite;
+    /* THE MASK: Hides everything except a circle around the mouse */
+    /* We use CSS variables --x and --y passed from JS */
+    -webkit-mask-image: radial-gradient(
+        300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+        black, 
+        transparent
+    );
+    mask-image: radial-gradient(
+        300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+        black, 
+        transparent
+    );
+    
+    /* Optimization to prevent lag */
+    pointer-events: none;
 }
 
 /* Slowly moves the grid to feel like a "system scan" */

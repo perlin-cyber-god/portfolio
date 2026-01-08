@@ -15,6 +15,10 @@
     --spacing-md: 32px;
     --spacing-lg: 64px;
     --spacing-xl: 120px;
+
+    /* Sparkle Animation Variables */
+    --glare: rgba(255, 255, 255, 0.9);
+    --shadow: var(--accent);
 }
 
 * {
@@ -53,7 +57,7 @@ main {
 
 section {
     margin-bottom: var(--spacing-xl);
-    padding-top: var(--spacing-lg); /* Offset for scroll anchor */
+    padding-top: var(--spacing-lg);
 }
 
 /* --- Navigation --- */
@@ -107,23 +111,50 @@ section {
    ========================================
 */
 .hero-section {
-    min-height: 90vh; /* Full viewport height */
+    min-height: 95vh;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* Ensure it doesn't overlap nav */
-    margin-top: 0; 
+    gap: var(--spacing-md);
+    padding-top: 60px; /* nav offset */
 }
 
-/* Helper text below envelope */
+/* Hero Profile Image */
+.hero-profile-container {
+    margin-bottom: var(--spacing-sm);
+    z-index: 20;
+}
+
+.profile-frame {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 15px var(--accent-dim);
+    transition: transform 0.3s ease;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+.profile-frame:hover .profile-img {
+    filter: grayscale(0%);
+}
+
 .hero-hint {
     position: absolute;
-    bottom: 20%;
+    bottom: 10%;
     font-family: var(--font-mono);
     color: var(--accent);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     letter-spacing: 1px;
     opacity: 0.7;
     animation: blink 2s infinite;
@@ -134,11 +165,11 @@ section {
     50% { opacity: 1; }
 }
 
-/* Container */
+/* Container - SCALED UP */
 .letter-image {
     position: relative;
-    width: 260px; /* Slightly wider to fit name */
-    height: 200px;
+    width: 320px; /* Increased from 260px */
+    height: 250px;
     cursor: pointer;
     z-index: 10;
 }
@@ -146,8 +177,8 @@ section {
 /* The Envelope Wrapper */
 .animated-mail {
     position: absolute;
-    height: 150px;
-    width: 260px;
+    height: 200px;
+    width: 320px;
     transition: 0.4s;
     top: 50%;
     transform: translateY(-50%);
@@ -160,8 +191,7 @@ section {
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 0 0 100px 260px;
-    /* Dark Grey Card Color */
+    border-width: 0 0 120px 320px;
     border-color: transparent transparent var(--card-bg) transparent; 
     z-index: 2;
     filter: drop-shadow(0 -1px 0 rgba(255,255,255,0.05));
@@ -174,10 +204,9 @@ section {
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 50px 130px 0 130px; /* Half of width */
+    border-width: 60px 160px 0 160px; /* Half of width */
     transform-origin: 50% 0%;
     transition: transform 0.4s 0.4s, z-index 0.2s 0.4s;
-    /* Slightly lighter than body for depth */
     border-color: #1e2126 transparent transparent transparent; 
     z-index: 2;
 }
@@ -186,9 +215,9 @@ section {
 .animated-mail .back-fold {
     position: absolute;
     bottom: 0;
-    width: 260px;
-    height: 100px;
-    background: #0f1114; /* Very dark inside */
+    width: 320px;
+    height: 130px;
+    background: #0f1114;
     z-index: 0;
 }
 
@@ -199,8 +228,7 @@ section {
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 50px 0 50px 130px;
-    /* Shadowed side */
+    border-width: 60px 0 60px 160px;
     border-color: transparent transparent transparent #121417; 
     z-index: 2;
 }
@@ -210,20 +238,19 @@ section {
     left: 20px;
     bottom: 0px;
     position: absolute;
-    width: 220px; /* Fits inside 260px envelope */
-    height: 60px; /* Hidden state */
-    background: var(--text-primary); /* White paper */
+    width: 280px; 
+    height: 80px; 
+    background: var(--text-primary);
     z-index: 1;
     overflow: hidden;
     transition: 0.4s 0.2s;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px;
+    padding: 15px;
     box-shadow: 0 0 5px rgba(0,0,0,0.2);
 }
 
-/* Cyan Striped Border on Paper */
 .letter-border {
     height: 6px;
     width: 100%;
@@ -238,38 +265,37 @@ section {
     margin-bottom: 12px;
 }
 
-/* Content inside Letter */
 .letter-content {
     text-align: center;
     width: 100%;
-    opacity: 0; /* Hidden initially */
+    opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.3s, transform 0.3s;
 }
 
+/* Increased Font Sizes for Hero */
 .letter-name {
     font-family: var(--font-main);
-    color: #1a1d21; /* Dark text on white paper */
-    font-size: 0.95rem;
+    color: #1a1d21;
+    font-size: 1.2rem;
     font-weight: 800;
     text-transform: uppercase;
-    margin-bottom: 2px;
+    margin-bottom: 5px;
     letter-spacing: -0.5px;
 }
 
 .letter-title {
     font-family: var(--font-mono);
     color: #555;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     line-height: 1.2;
     text-transform: uppercase;
 }
 
-/* Stamp Decoration */
 .letter-stamp-inner {
-    margin-top: 10px;
-    width: 24px; 
-    height: 24px; 
+    margin-top: 15px;
+    width: 28px; 
+    height: 28px; 
     background: var(--accent);
     border-radius: 50%;
     opacity: 0.2;
@@ -277,24 +303,21 @@ section {
     margin-right: auto;
 }
 
-/* Shadow under Envelope */
 .shadow {
     position: absolute;
-    top: 200px;
+    top: 250px;
     left: 50%;
-    width: 400px;
+    width: 450px;
     height: 30px;
     transition: 0.4s;
     transform: translateX(-50%);
     border-radius: 50%;
-    /* Soft Cyan Glow */
     background: radial-gradient(rgba(0, 243, 255, 0.1), rgba(0,0,0,0.0) 70%); 
 }
 
-/* --- Hover Interaction States --- */
-
+/* Hover States */
 .letter-image:hover .animated-mail {
-    transform: translateY(50px);
+    transform: translateY(60px);
 }
 
 .letter-image:hover .animated-mail .top-fold {
@@ -304,25 +327,19 @@ section {
 }
 
 .letter-image:hover .animated-mail .letter {
-    height: 180px; /* Expands paper */
+    height: 220px;
 }
 
 .letter-image:hover .letter-content {
     opacity: 1; 
     transform: translateY(0);
-    transition-delay: 0.5s; /* Wait for open */
+    transition-delay: 0.5s;
 }
 
 .letter-image:hover .shadow {
-    width: 250px;
+    width: 300px;
     background: radial-gradient(rgba(0, 243, 255, 0.25), rgba(0,0,0,0.0) 70%);
 }
-
-/* ========================================
-   END HERO
-   ========================================
-*/
-
 
 /* --- Section Headers --- */
 .section-title {
@@ -353,6 +370,64 @@ section {
 
 .about-content p {
     margin-bottom: var(--spacing-sm);
+}
+
+/* --- Education (NEW) --- */
+.education-grid {
+    display: grid;
+    gap: var(--spacing-md);
+    max-width: 800px;
+}
+
+.edu-item {
+    border-left: 2px solid rgba(255,255,255,0.1);
+    padding-left: var(--spacing-md);
+    position: relative;
+}
+
+.edu-item::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    background: var(--bg-color);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+}
+
+.edu-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--spacing-xs);
+}
+
+.edu-year {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-bottom: 4px;
+}
+
+.edu-degree {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.edu-inst {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.edu-stats {
+    margin-top: var(--spacing-xs);
+    list-style: none;
+    display: flex;
+    gap: var(--spacing-md);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
 }
 
 /* --- Skills --- */
@@ -404,6 +479,8 @@ section {
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow: hidden; /* For sparkle containment */
 }
 
 .project-card:hover {
@@ -415,19 +492,103 @@ section {
 .card-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: flex-start;
     margin-bottom: var(--spacing-sm);
 }
 
-.card-header h4 {
-    color: var(--text-primary);
-    font-size: 1.2rem;
+/* ========================================
+   SPARKLE ANIMATION CSS (Adapted)
+   ========================================
+*/
+.sparkle-text {
+    position: relative;
+    display: inline-block;
+    --hover: 0;
+    --pos: 0;
 }
+
+.project-card:hover .sparkle-text {
+    --hover: 1;
+    --pos: 1;
+}
+
+.text-layer {
+    display: inline-block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: all 0.2s;
+    /* The 3D Glitch Layering */
+    text-shadow:
+        calc(var(--hover) * (1.2rem * -0.02)) calc(var(--hover) * (1.2rem * 0.02)) var(--shadow),
+        calc(var(--hover) * (1.2rem * -0.04)) calc(var(--hover) * (1.2rem * 0.04)) var(--shadow),
+        calc(var(--hover) * (1.2rem * -0.06)) calc(var(--hover) * (1.2rem * 0.06)) var(--shadow);
+    transform: translate(calc(var(--hover) * (1.2rem * 0.05)), calc(var(--hover) * (1.2rem * -0.05)));
+}
+
+/* The Shine Overlay */
+.text-layer:last-of-type {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        108deg,
+        transparent 0 55%,
+        var(--glare) 55% 60%,
+        transparent 60% 70%,
+        var(--glare) 70% 85%,
+        transparent 85%
+    ) calc(var(--pos) * -200%) 0% / 200% 100%, var(--accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    z-index: 2;
+    text-shadow: none;
+    transform: translate(calc(var(--hover) * (1.2rem * 0.05)), calc(var(--hover) * (1.2rem * -0.05)));
+    transition: transform 0.2s, background-position 0s;
+}
+
+.project-card:hover .text-layer:last-of-type {
+    transition: transform 0.2s, background-position 1s;
+}
+
+/* Sparkle SVGs */
+.sparkle-text svg {
+    position: absolute;
+    z-index: 3;
+    width: 12px;
+    height: 12px;
+    pointer-events: none;
+}
+
+.sparkle-text svg path {
+    fill: var(--glare);
+}
+
+.project-card:hover .sparkle-text svg {
+    animation: sparkle 0.75s calc((var(--delay-step) * var(--d)) * 1s) both;
+}
+
+@keyframes sparkle {
+    50% { transform: translate(-50%, -50%) scale(var(--s, 1)); }
+}
+
+.sparkle-text svg {
+    --delay-step: 0.15;
+    top: calc(var(--y, 50) * 1%);
+    left: calc(var(--x, 0) * 1%);
+    transform: translate(-50%, -50%) scale(0);
+}
+
+/* Positioning Sparkles */
+.sparkle-text svg:nth-of-type(1) { --x: 0; --y: 20; --s: 1.1; --d: 1; }
+.sparkle-text svg:nth-of-type(2) { --x: 100; --y: 80; --s: 1.25; --d: 2; }
+.sparkle-text svg:nth-of-type(3) { --x: 50; --y: 0; --s: 1.1; --d: 3; }
 
 .tech-tag {
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--accent);
+    margin-left: var(--spacing-sm);
 }
 
 .project-desc {
@@ -493,11 +654,13 @@ section {
 }
 
 .link-arrow {
-    font-size: 1rem;
-    margin-left: var(--spacing-xs);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    margin-left: var(--spacing-sm);
     opacity: 0;
     transform: translateX(-10px);
     transition: all 0.2s ease;
+    color: var(--accent);
 }
 
 .contact-item:hover .link-arrow {
@@ -515,7 +678,7 @@ footer {
     opacity: 0.5;
 }
 
-/* --- Animations (Scroll Reveal) --- */
+/* --- Animations --- */
 .hidden {
     opacity: 0;
     transform: translateY(30px);
